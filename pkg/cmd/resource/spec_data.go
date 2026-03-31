@@ -13,10 +13,11 @@ type OperationSpec struct {
 
 // ParamSpec describes a single parameter of an API operation.
 type ParamSpec struct {
-	Type     string // "string" | "integer" | "boolean" | "number" | "array"
-	Required bool
-	Format   string // e.g. "date-time", "unix-time"
-	Enum     []EnumSpec
+	Type             string // "string" | "integer" | "boolean" | "number" | "array"
+	ShortDescription string
+	Required         bool
+	Format           string // e.g. "date-time", "unix-time"
+	Enum             []EnumSpec
 }
 
 // EnumSpec describes a single valid value for an enum parameter.
