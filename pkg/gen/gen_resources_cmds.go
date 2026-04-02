@@ -402,8 +402,11 @@ func getOperationParams(apiNamespace ApiNamespace, specOp *spec.Operation, op sp
 					continue
 				}
 
-				if schema.Type == "object" {
-					addDenormalizedParams(params, propName, schema)
+				if obj := gen.ResolveObjectSchema(schema); obj != nil {
+					addDenormalizedParams(params, propName, obj)
+					if gen.IsClearableObject(schema) {
+						params[propName] = &resource.ParamSpec{Type: "clearable_object"}
+					}
 				} else {
 					scalarType := gen.GetType(schema)
 					if scalarType == nil {
@@ -453,8 +456,8 @@ func addDenormalizedParams(params map[string]*resource.ParamSpec, prefix string,
 	for propName, propSchema := range schema.Properties {
 		key := prefix + "." + propName
 
-		if propSchema.Type == "object" {
-			addDenormalizedParams(params, key, propSchema)
+		if obj := gen.ResolveObjectSchema(propSchema); obj != nil {
+			addDenormalizedParams(params, key, obj)
 		} else {
 			scalarType := gen.GetType(propSchema)
 			if scalarType == nil {
